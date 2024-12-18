@@ -9,10 +9,18 @@ namespace MyMvcApp.Controllers
         public static List<User> userlist = new List<User>();
 
         // GET: User
-        public ActionResult Index()
-        {
-            return View(userlist);
-        }
+                public ActionResult Index(string searchString)
+                {
+                    var users = from u in userlist
+                                select u;
+
+                    if (!string.IsNullOrEmpty(searchString))
+                    {
+                        users = users.Where(s => s.Name.Contains(searchString) || s.Email.Contains(searchString));
+                    }
+
+                    return View(users.ToList());
+                }
 
         // GET: User/Details/5
         public ActionResult Details(int id)
@@ -84,6 +92,8 @@ namespace MyMvcApp.Controllers
             }
             return View(user);
         }
+
+
 
         // POST: User/Delete/5
         [HttpPost, ActionName("Delete")]
